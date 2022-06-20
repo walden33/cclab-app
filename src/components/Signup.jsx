@@ -14,7 +14,7 @@ const Signup = () => {
             await createUser(email, password);
         } catch (e) {
             setError(e.message);
-            console.log(e.message);
+            console.log(error);
         }
     };
     return (
