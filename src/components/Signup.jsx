@@ -1,22 +1,41 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { db } from "../firebase";
 import { UserAuth } from "../contexts/AuthContext";
+import { doc, setDoc } from "firebase/firestore";
 
 const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { createUser } = UserAuth();
+    const { user, createUser } = UserAuth();
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         try {
             await createUser(email, password);
+            await setDoc(doc(db, "users", email), {
+                initialized: false,
+                demographic: {
+                    firstName: null,
+                    lastName: null,
+                    gender: null,
+                },
+            });
         } catch (e) {
             setError(e.message);
             console.log(error);
         }
     };
+
+    // Users don't need to be here if they are already signed in.
+    useEffect(() => {
+        if (user != null) {
+            navigate("/dashboard");
+        }
+    }, [user]);
+
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
             <div>
