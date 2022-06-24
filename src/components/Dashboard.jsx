@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+    doc,
+    onSnapshot,
+    updateDoc,
+    collection,
+    query,
+    where,
+    getDocs,
+} from "firebase/firestore";
 import TimeButton from "./TimeButton";
 
 const Dashboard = () => {
@@ -27,13 +35,16 @@ const Dashboard = () => {
         }
     };
 
-    // Handler of updating availability
-    const handleUpdate = async (e) => {
-        try {
-            console.log(e.target.id);
-        } catch (err) {
-            console.log(err.message);
-        }
+    // Perform queries for registered sessions
+    const getSessions = async () => {
+        const sessionQuery = query(
+            collection(db, "sessions"),
+            where("subId", "==", "UWnnv7mK1aNWucsJNHZx")
+        );
+        const querySnapshot = await getDocs(sessionQuery);
+        querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+        });
     };
 
     return (
@@ -62,75 +73,71 @@ const Dashboard = () => {
                 <tbody>
                     <tr>
                         <td>07:00 AM</td>
-                        <TimeButton
-                            id="Mon_0700"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Tue_0700"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Wed_0700"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Thu_0700"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Fri_0700"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
+                        <TimeButton id="Mon_0700"></TimeButton>
+                        <TimeButton id="Tue_0700"></TimeButton>
+                        <TimeButton id="Wed_0700"></TimeButton>
+                        <TimeButton id="Thu_0700"></TimeButton>
+                        <TimeButton id="Fri_0700"></TimeButton>
                     </tr>
                     <tr>
                         <td>07:30 AM</td>
-                        <TimeButton
-                            id="Mon_0730"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Tue_0730"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Wed_0730"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Thu_0730"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Fri_0730"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
+                        <TimeButton id="Mon_0730"></TimeButton>
+                        <TimeButton id="Tue_0730"></TimeButton>
+                        <TimeButton id="Wed_0730"></TimeButton>
+                        <TimeButton id="Thu_0730"></TimeButton>
+                        <TimeButton id="Fri_0730"></TimeButton>
                     </tr>
                     <tr>
                         <td>08:00 AM</td>
-                        <TimeButton
-                            id="Mon_0800"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Tue_0800"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Wed_0800"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Thu_0800"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
-                        <TimeButton
-                            id="Fri_0800"
-                            updateFunction={handleUpdate}
-                        ></TimeButton>
+                        <TimeButton id="Mon_0800"></TimeButton>
+                        <TimeButton id="Tue_0800"></TimeButton>
+                        <TimeButton id="Wed_0800"></TimeButton>
+                        <TimeButton id="Thu_0800"></TimeButton>
+                        <TimeButton id="Fri_0800"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>08:30 AM</td>
+                        <TimeButton id="Mon_0830"></TimeButton>
+                        <TimeButton id="Tue_0830"></TimeButton>
+                        <TimeButton id="Wed_0830"></TimeButton>
+                        <TimeButton id="Thu_0830"></TimeButton>
+                        <TimeButton id="Fri_0830"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>09:00 AM</td>
+                        <TimeButton id="Mon_0900"></TimeButton>
+                        <TimeButton id="Tue_0900"></TimeButton>
+                        <TimeButton id="Wed_0900"></TimeButton>
+                        <TimeButton id="Thu_0900"></TimeButton>
+                        <TimeButton id="Fri_0900"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>09:30 AM</td>
+                        <TimeButton id="Mon_0930"></TimeButton>
+                        <TimeButton id="Tue_0930"></TimeButton>
+                        <TimeButton id="Wed_0930"></TimeButton>
+                        <TimeButton id="Thu_0930"></TimeButton>
+                        <TimeButton id="Fri_0930"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>08:00 AM</td>
+                        <TimeButton id="Mon_0800"></TimeButton>
+                        <TimeButton id="Tue_0800"></TimeButton>
+                        <TimeButton id="Wed_0800"></TimeButton>
+                        <TimeButton id="Thu_0800"></TimeButton>
+                        <TimeButton id="Fri_0800"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>08:00 AM</td>
+                        <TimeButton id="Mon_0800"></TimeButton>
+                        <TimeButton id="Tue_0800"></TimeButton>
+                        <TimeButton id="Wed_0800"></TimeButton>
+                        <TimeButton id="Thu_0800"></TimeButton>
+                        <TimeButton id="Fri_0800"></TimeButton>
                     </tr>
                 </tbody>
             </table>
+            <h1 className="text-2xl font-bold py-4">Registered Sessions</h1>
         </div>
     );
 };
