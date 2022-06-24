@@ -15,6 +15,9 @@ const SessionRow = (props) => {
             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                 {props.ra}
             </td>
+            <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                {"$ ".concat(props.compensation)}
+            </td>
         </tr>
     );
 };
