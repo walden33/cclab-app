@@ -59,7 +59,9 @@ const TimeButton = (props) => {
     return (
         <td
             className={"text-center border border-slate-400 ".concat(
-                free ? "bg-green-300" : "bg-red-300"
+                free
+                    ? "bg-green-300 hover:bg-green-50"
+                    : "bg-red-300 hover:bg-red-50"
             )}
             id={props.id}
             onClick={handleClick}
