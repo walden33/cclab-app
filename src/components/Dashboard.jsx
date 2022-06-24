@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import {
     doc,
+    getDoc,
     onSnapshot,
     updateDoc,
     collection,
@@ -12,18 +13,25 @@ import {
     getDocs,
 } from "firebase/firestore";
 import TimeButton from "./TimeButton";
+import SessionRow from "./SessionRow";
 
 const Dashboard = () => {
     const { user, logOut } = UserAuth();
     const navigate = useNavigate();
 
-    const [demo, setDemo] = useState({});
+    const [name, setName] = useState("");
+    const [age, setAge] = useState(0);
+    const [gender, setGender] = useState("");
+    const [sessions, setSessions] = useState([]);
 
-    // useEffect(() => {
-    //     onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
-    //         setDemo(doc.data()?.demographic);
-    //     });
-    // }, [user?.email]);
+    // Load user name, age, and gender
+    useEffect(() => {
+        onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
+            setName(doc.data()?.name);
+            setAge(doc.data()?.age);
+            setGender(doc.data()?.gender);
+        });
+    }, [user?.email]);
 
     const handleLogout = async () => {
         try {
@@ -35,26 +43,32 @@ const Dashboard = () => {
         }
     };
 
-    // Perform queries for registered sessions
-    const getSessions = async () => {
-        const sessionQuery = query(
-            collection(db, "sessions"),
-            where("subId", "==", "UWnnv7mK1aNWucsJNHZx")
-        );
-        const querySnapshot = await getDocs(sessionQuery);
-        querySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
-        });
-    };
+    // Get registered session for current user
+    useEffect(() => {
+        if (JSON.stringify(user) !== "{}") {
+            getDocs(
+                query(
+                    collection(db, "sessions"),
+                    where("subId", "==", user.email)
+                )
+            ).then((snapshot) => {
+                const sessionArray = [];
+                snapshot.forEach((doc) => {
+                    sessionArray.push(doc.data());
+                });
+                setSessions(sessionArray);
+            });
+        }
+    }, [user?.email]);
 
     return (
         <div className="max-w-[600px] mx-auto my-16 p-4">
             <h1 className="text-2xl font-bold py-4">Account</h1>
             <p>User Email: {user && user.email}</p>
             <p>User ID: {user && user.uid}</p>
-            <p>Name: {user && demo.firstName}</p>
-            <p>Age: {user && demo.age}</p>
-            <p>Gender: {user && demo.gender}</p>
+            <p>Name: {user && name}</p>
+            <p>Age: {user && age}</p>
+            <p>Gender: {user && gender}</p>
             <button onClick={handleLogout} className="border px-6 py-2 my-4">
                 Logout
             </button>
@@ -120,7 +134,7 @@ const Dashboard = () => {
                         <TimeButton id="Fri_0930"></TimeButton>
                     </tr>
                     <tr>
-                        <td>08:00 AM</td>
+                        <td>10:00 AM</td>
                         <TimeButton id="Mon_0800"></TimeButton>
                         <TimeButton id="Tue_0800"></TimeButton>
                         <TimeButton id="Wed_0800"></TimeButton>
@@ -128,16 +142,137 @@ const Dashboard = () => {
                         <TimeButton id="Fri_0800"></TimeButton>
                     </tr>
                     <tr>
-                        <td>08:00 AM</td>
-                        <TimeButton id="Mon_0800"></TimeButton>
-                        <TimeButton id="Tue_0800"></TimeButton>
-                        <TimeButton id="Wed_0800"></TimeButton>
-                        <TimeButton id="Thu_0800"></TimeButton>
-                        <TimeButton id="Fri_0800"></TimeButton>
+                        <td>10:30 AM</td>
+                        <TimeButton id="Mon_1030"></TimeButton>
+                        <TimeButton id="Tue_1030"></TimeButton>
+                        <TimeButton id="Wed_1030"></TimeButton>
+                        <TimeButton id="Thu_1030"></TimeButton>
+                        <TimeButton id="Fri_1030"></TimeButton>
                     </tr>
                 </tbody>
             </table>
             <h1 className="text-2xl font-bold py-4">Registered Sessions</h1>
+            <div className="flex flex-col">
+                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                        <div className="overflow-hidden">
+                            <table className="min-w-full">
+                                <thead className="border-b">
+                                    <tr>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Session Code
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Time Start
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Time End
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Researcher
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sessions.map(
+                                        (item, key) =>
+                                            item.status === "open" && (
+                                                <SessionRow
+                                                    code={item.sessionCode}
+                                                    start={item.startTime
+                                                        .toDate()
+                                                        .toLocaleString(
+                                                            "en-US"
+                                                        )}
+                                                    end={item.endTime
+                                                        .toDate()
+                                                        .toLocaleString(
+                                                            "en-US"
+                                                        )}
+                                                    ra={item.ra}
+                                                    key={key}
+                                                />
+                                            )
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 className="text-2xl font-bold py-4">Completed Sessions</h1>
+            <div className="flex flex-col">
+                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                    <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                        <div className="overflow-hidden">
+                            <table className="min-w-full">
+                                <thead className="border-b">
+                                    <tr>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Session Code
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Time Start
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Time End
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Researcher
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sessions.map(
+                                        (item, key) =>
+                                            item.status === "complete" && (
+                                                <SessionRow
+                                                    code={item.sessionCode}
+                                                    start={item.startTime
+                                                        .toDate()
+                                                        .toLocaleString(
+                                                            "en-US"
+                                                        )}
+                                                    end={item.endTime
+                                                        .toDate()
+                                                        .toLocaleString(
+                                                            "en-US"
+                                                        )}
+                                                    ra={item.ra}
+                                                    key={key}
+                                                />
+                                            )
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
