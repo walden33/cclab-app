@@ -9,7 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
     return (
         <div className="App">
-            <h1 className="text-center text-3xl font-bold">CCLAB</h1>
+            <h1 className="text-center text-3xl font-bold my-10">CCLab</h1>
             <AuthContextProvider>
                 <Routes>
                     <Route path="/" element={<Signin />}></Route>
