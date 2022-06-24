@@ -135,11 +135,11 @@ const Dashboard = () => {
                     </tr>
                     <tr>
                         <td>10:00 AM</td>
-                        <TimeButton id="Mon_0800"></TimeButton>
-                        <TimeButton id="Tue_0800"></TimeButton>
-                        <TimeButton id="Wed_0800"></TimeButton>
-                        <TimeButton id="Thu_0800"></TimeButton>
-                        <TimeButton id="Fri_0800"></TimeButton>
+                        <TimeButton id="Mon_1000"></TimeButton>
+                        <TimeButton id="Tue_1000"></TimeButton>
+                        <TimeButton id="Wed_1000"></TimeButton>
+                        <TimeButton id="Thu_1000"></TimeButton>
+                        <TimeButton id="Fri_1000"></TimeButton>
                     </tr>
                     <tr>
                         <td>10:30 AM</td>
@@ -148,6 +148,102 @@ const Dashboard = () => {
                         <TimeButton id="Wed_1030"></TimeButton>
                         <TimeButton id="Thu_1030"></TimeButton>
                         <TimeButton id="Fri_1030"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>11:00 AM</td>
+                        <TimeButton id="Mon_1100"></TimeButton>
+                        <TimeButton id="Tue_1100"></TimeButton>
+                        <TimeButton id="Wed_1100"></TimeButton>
+                        <TimeButton id="Thu_1100"></TimeButton>
+                        <TimeButton id="Fri_1100"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>11:30 AM</td>
+                        <TimeButton id="Mon_1130"></TimeButton>
+                        <TimeButton id="Tue_1130"></TimeButton>
+                        <TimeButton id="Wed_1130"></TimeButton>
+                        <TimeButton id="Thu_1130"></TimeButton>
+                        <TimeButton id="Fri_1130"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>12:00 PM</td>
+                        <TimeButton id="Mon_1200"></TimeButton>
+                        <TimeButton id="Tue_1200"></TimeButton>
+                        <TimeButton id="Wed_1200"></TimeButton>
+                        <TimeButton id="Thu_1200"></TimeButton>
+                        <TimeButton id="Fri_1200"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>12:30 PM</td>
+                        <TimeButton id="Mon_1230"></TimeButton>
+                        <TimeButton id="Tue_1230"></TimeButton>
+                        <TimeButton id="Wed_1230"></TimeButton>
+                        <TimeButton id="Thu_1230"></TimeButton>
+                        <TimeButton id="Fri_1230"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>1:00 PM</td>
+                        <TimeButton id="Mon_1300"></TimeButton>
+                        <TimeButton id="Tue_1300"></TimeButton>
+                        <TimeButton id="Wed_1300"></TimeButton>
+                        <TimeButton id="Thu_1300"></TimeButton>
+                        <TimeButton id="Fri_1300"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>1:30 PM</td>
+                        <TimeButton id="Mon_1330"></TimeButton>
+                        <TimeButton id="Tue_1330"></TimeButton>
+                        <TimeButton id="Wed_1330"></TimeButton>
+                        <TimeButton id="Thu_1330"></TimeButton>
+                        <TimeButton id="Fri_1330"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>2:00 PM</td>
+                        <TimeButton id="Mon_1400"></TimeButton>
+                        <TimeButton id="Tue_1400"></TimeButton>
+                        <TimeButton id="Wed_1400"></TimeButton>
+                        <TimeButton id="Thu_1400"></TimeButton>
+                        <TimeButton id="Fri_1400"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>2:30 PM</td>
+                        <TimeButton id="Mon_1430"></TimeButton>
+                        <TimeButton id="Tue_1430"></TimeButton>
+                        <TimeButton id="Wed_1430"></TimeButton>
+                        <TimeButton id="Thu_1430"></TimeButton>
+                        <TimeButton id="Fri_1430"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>3:00 PM</td>
+                        <TimeButton id="Mon_1500"></TimeButton>
+                        <TimeButton id="Tue_1500"></TimeButton>
+                        <TimeButton id="Wed_1500"></TimeButton>
+                        <TimeButton id="Thu_1500"></TimeButton>
+                        <TimeButton id="Fri_1500"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>3:30 PM</td>
+                        <TimeButton id="Mon_1530"></TimeButton>
+                        <TimeButton id="Tue_1530"></TimeButton>
+                        <TimeButton id="Wed_1530"></TimeButton>
+                        <TimeButton id="Thu_1530"></TimeButton>
+                        <TimeButton id="Fri_1530"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>4:00 PM</td>
+                        <TimeButton id="Mon_1600"></TimeButton>
+                        <TimeButton id="Tue_1600"></TimeButton>
+                        <TimeButton id="Wed_1600"></TimeButton>
+                        <TimeButton id="Thu_1600"></TimeButton>
+                        <TimeButton id="Fri_1600"></TimeButton>
+                    </tr>
+                    <tr>
+                        <td>4:30 PM</td>
+                        <TimeButton id="Mon_1630"></TimeButton>
+                        <TimeButton id="Tue_1630"></TimeButton>
+                        <TimeButton id="Wed_1630"></TimeButton>
+                        <TimeButton id="Thu_1630"></TimeButton>
+                        <TimeButton id="Fri_1630"></TimeButton>
                     </tr>
                 </tbody>
             </table>
