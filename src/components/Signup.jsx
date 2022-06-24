@@ -16,12 +16,7 @@ const Signup = () => {
         try {
             await createUser(email, password);
             await setDoc(doc(db, "users", email), {
-                initialized: false,
-                demographic: {
-                    firstName: null,
-                    lastName: null,
-                    gender: null,
-                },
+                times: [],
             });
         } catch (e) {
             setError(e.message);
