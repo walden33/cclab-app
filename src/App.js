@@ -2,6 +2,7 @@ import React from "react";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
+import RADashboard from "./components/RADashboard";
 import { Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -19,6 +20,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    ></Route>
+                    <Route
+                        path="/dashboard/researcher"
+                        element={
+                            <ProtectedRoute>
+                                <RADashboard />
                             </ProtectedRoute>
                         }
                     ></Route>
