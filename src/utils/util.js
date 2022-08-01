@@ -14,17 +14,27 @@ export const getTimes = () => {
     return result;
 };
 
-export const getTimeStringsIn12HFormat = () => {
-    let result = [];
-    const times = getTimes();
-    times.forEach((time) => {
-        if (Number(time) < 1200) {
-            // AM
-            result.push(`${time.substring(0, 2)}:${time.substring(2, 4)} AM`);
-        } else {
-            // PM
-            result.push(`${time.substring(0, 2)}:${time.substring(2, 4)} PM`);
-        }
-    });
-    return result;
+/**
+ * Converts a HHMM (24h) string to a HH:MM AM/PM string
+ *
+ * @param {string} hhmm : time in HHMM (24h) format
+ * @returns
+ */
+export const getTimeStringsIn12HFormat = (hhmm) => {
+    if (Number(hhmm) < 1200) {
+        return `${hhmm.substring(0, 2)}:${hhmm.substring(2, 4)} AM`;
+    }
+    if (Number(hhmm) < 1300) {
+        return `${hhmm.substring(0, 2)}:${hhmm.substring(2, 4)} PM`;
+    }
+    // subtract 12 for afternoon hours beginning 1300
+    const time = Number(hhmm) - 1200;
+    if (time < 1000) {
+        // pad zero
+        return (
+            `0${String(time).substring(0, 1)}:` +
+            `${String(time).substring(1, 3)} PM`
+        );
+    }
+    return `${String(time).substring(0, 2)}:${String(time).substring(2, 4)} PM`;
 };
