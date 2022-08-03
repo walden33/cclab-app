@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
@@ -14,8 +14,12 @@ import {
 } from "firebase/firestore";
 import TimeButton from "./TimeButton";
 import SessionRow from "./SessionRow";
+import { getTimes, getTimeStringsIn12HFormat } from "../utils/util";
 
 const Dashboard = () => {
+    const DAYSOFWEEK = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+    const TIMES = getTimes();
+
     const { user, logOut } = UserAuth();
     const navigate = useNavigate();
 
@@ -77,174 +81,21 @@ const Dashboard = () => {
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
+                        {DAYSOFWEEK.map((item, key) => (
+                            <th key={key}>{item}</th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>07:00 AM</td>
-                        <TimeButton id="Mon_0700"></TimeButton>
-                        <TimeButton id="Tue_0700"></TimeButton>
-                        <TimeButton id="Wed_0700"></TimeButton>
-                        <TimeButton id="Thu_0700"></TimeButton>
-                        <TimeButton id="Fri_0700"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>07:30 AM</td>
-                        <TimeButton id="Mon_0730"></TimeButton>
-                        <TimeButton id="Tue_0730"></TimeButton>
-                        <TimeButton id="Wed_0730"></TimeButton>
-                        <TimeButton id="Thu_0730"></TimeButton>
-                        <TimeButton id="Fri_0730"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>08:00 AM</td>
-                        <TimeButton id="Mon_0800"></TimeButton>
-                        <TimeButton id="Tue_0800"></TimeButton>
-                        <TimeButton id="Wed_0800"></TimeButton>
-                        <TimeButton id="Thu_0800"></TimeButton>
-                        <TimeButton id="Fri_0800"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>08:30 AM</td>
-                        <TimeButton id="Mon_0830"></TimeButton>
-                        <TimeButton id="Tue_0830"></TimeButton>
-                        <TimeButton id="Wed_0830"></TimeButton>
-                        <TimeButton id="Thu_0830"></TimeButton>
-                        <TimeButton id="Fri_0830"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>09:00 AM</td>
-                        <TimeButton id="Mon_0900"></TimeButton>
-                        <TimeButton id="Tue_0900"></TimeButton>
-                        <TimeButton id="Wed_0900"></TimeButton>
-                        <TimeButton id="Thu_0900"></TimeButton>
-                        <TimeButton id="Fri_0900"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>09:30 AM</td>
-                        <TimeButton id="Mon_0930"></TimeButton>
-                        <TimeButton id="Tue_0930"></TimeButton>
-                        <TimeButton id="Wed_0930"></TimeButton>
-                        <TimeButton id="Thu_0930"></TimeButton>
-                        <TimeButton id="Fri_0930"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>10:00 AM</td>
-                        <TimeButton id="Mon_1000"></TimeButton>
-                        <TimeButton id="Tue_1000"></TimeButton>
-                        <TimeButton id="Wed_1000"></TimeButton>
-                        <TimeButton id="Thu_1000"></TimeButton>
-                        <TimeButton id="Fri_1000"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>10:30 AM</td>
-                        <TimeButton id="Mon_1030"></TimeButton>
-                        <TimeButton id="Tue_1030"></TimeButton>
-                        <TimeButton id="Wed_1030"></TimeButton>
-                        <TimeButton id="Thu_1030"></TimeButton>
-                        <TimeButton id="Fri_1030"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>11:00 AM</td>
-                        <TimeButton id="Mon_1100"></TimeButton>
-                        <TimeButton id="Tue_1100"></TimeButton>
-                        <TimeButton id="Wed_1100"></TimeButton>
-                        <TimeButton id="Thu_1100"></TimeButton>
-                        <TimeButton id="Fri_1100"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>11:30 AM</td>
-                        <TimeButton id="Mon_1130"></TimeButton>
-                        <TimeButton id="Tue_1130"></TimeButton>
-                        <TimeButton id="Wed_1130"></TimeButton>
-                        <TimeButton id="Thu_1130"></TimeButton>
-                        <TimeButton id="Fri_1130"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>12:00 PM</td>
-                        <TimeButton id="Mon_1200"></TimeButton>
-                        <TimeButton id="Tue_1200"></TimeButton>
-                        <TimeButton id="Wed_1200"></TimeButton>
-                        <TimeButton id="Thu_1200"></TimeButton>
-                        <TimeButton id="Fri_1200"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>12:30 PM</td>
-                        <TimeButton id="Mon_1230"></TimeButton>
-                        <TimeButton id="Tue_1230"></TimeButton>
-                        <TimeButton id="Wed_1230"></TimeButton>
-                        <TimeButton id="Thu_1230"></TimeButton>
-                        <TimeButton id="Fri_1230"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>1:00 PM</td>
-                        <TimeButton id="Mon_1300"></TimeButton>
-                        <TimeButton id="Tue_1300"></TimeButton>
-                        <TimeButton id="Wed_1300"></TimeButton>
-                        <TimeButton id="Thu_1300"></TimeButton>
-                        <TimeButton id="Fri_1300"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>1:30 PM</td>
-                        <TimeButton id="Mon_1330"></TimeButton>
-                        <TimeButton id="Tue_1330"></TimeButton>
-                        <TimeButton id="Wed_1330"></TimeButton>
-                        <TimeButton id="Thu_1330"></TimeButton>
-                        <TimeButton id="Fri_1330"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>2:00 PM</td>
-                        <TimeButton id="Mon_1400"></TimeButton>
-                        <TimeButton id="Tue_1400"></TimeButton>
-                        <TimeButton id="Wed_1400"></TimeButton>
-                        <TimeButton id="Thu_1400"></TimeButton>
-                        <TimeButton id="Fri_1400"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>2:30 PM</td>
-                        <TimeButton id="Mon_1430"></TimeButton>
-                        <TimeButton id="Tue_1430"></TimeButton>
-                        <TimeButton id="Wed_1430"></TimeButton>
-                        <TimeButton id="Thu_1430"></TimeButton>
-                        <TimeButton id="Fri_1430"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>3:00 PM</td>
-                        <TimeButton id="Mon_1500"></TimeButton>
-                        <TimeButton id="Tue_1500"></TimeButton>
-                        <TimeButton id="Wed_1500"></TimeButton>
-                        <TimeButton id="Thu_1500"></TimeButton>
-                        <TimeButton id="Fri_1500"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>3:30 PM</td>
-                        <TimeButton id="Mon_1530"></TimeButton>
-                        <TimeButton id="Tue_1530"></TimeButton>
-                        <TimeButton id="Wed_1530"></TimeButton>
-                        <TimeButton id="Thu_1530"></TimeButton>
-                        <TimeButton id="Fri_1530"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>4:00 PM</td>
-                        <TimeButton id="Mon_1600"></TimeButton>
-                        <TimeButton id="Tue_1600"></TimeButton>
-                        <TimeButton id="Wed_1600"></TimeButton>
-                        <TimeButton id="Thu_1600"></TimeButton>
-                        <TimeButton id="Fri_1600"></TimeButton>
-                    </tr>
-                    <tr>
-                        <td>4:30 PM</td>
-                        <TimeButton id="Mon_1630"></TimeButton>
-                        <TimeButton id="Tue_1630"></TimeButton>
-                        <TimeButton id="Wed_1630"></TimeButton>
-                        <TimeButton id="Thu_1630"></TimeButton>
-                        <TimeButton id="Fri_1630"></TimeButton>
-                    </tr>
+                    {console.log(TIMES)}
+                    {TIMES.map((time, timeKey) => (
+                        <tr key={timeKey}>
+                            <td>{getTimeStringsIn12HFormat(time)}</td>
+                            {DAYSOFWEEK.map((d, dKey) => (
+                                <TimeButton id={`${d}_${time}`}></TimeButton>
+                            ))}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
             <h1 className="text-2xl font-bold py-4">Registered Sessions</h1>
