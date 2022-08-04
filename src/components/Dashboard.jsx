@@ -1,10 +1,9 @@
-import React, { useEffect, useState, Suspense, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import {
     doc,
-    getDoc,
     onSnapshot,
     updateDoc,
     collection,

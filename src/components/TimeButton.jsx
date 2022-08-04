@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { UserAuth } from "../contexts/AuthContext";
-import {
-    doc,
-    updateDoc,
-    arrayUnion,
-    arrayRemove,
-    query,
-    collection,
-    getDoc,
-    getDocs,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 const TimeButton = ({ id, toggleAvailbility }) => {
     const [free, setFree] = useState(false);
