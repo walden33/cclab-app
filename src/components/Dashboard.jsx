@@ -11,6 +11,8 @@ import {
     query,
     where,
     getDocs,
+    arrayUnion,
+    arrayRemove,
 } from "firebase/firestore";
 import TimeButton from "./TimeButton";
 import SessionRow from "./SessionRow";
@@ -66,8 +68,19 @@ const Dashboard = () => {
         }
     };
 
-    const toggleAvailbility = async (time) => {
-        console.log(time);
+    // Callback that passes down to <TimeButton>s that updates database for available times of an user
+    const toggleAvailbility = async (time, previousState) => {
+        // if the previous state is not free, add this time window to array
+        if (previousState === false) {
+            await updateDoc(doc(db, "users", user.email), {
+                times: arrayUnion(time),
+            });
+        } else {
+            // if the previous state is free, remove this time window from array
+            await updateDoc(doc(db, "users", user.email), {
+                times: arrayRemove(time),
+            });
+        }
     };
 
     return (
@@ -97,6 +110,7 @@ const Dashboard = () => {
                             <td>{getTimeStringsIn12HFormat(time)}</td>
                             {DAYSOFWEEK.map((d, dKey) => (
                                 <TimeButton
+                                    key={dKey}
                                     id={`${d}_${time}`}
                                     toggleAvailbility={toggleAvailbility}
                                 ></TimeButton>

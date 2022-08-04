@@ -17,22 +17,8 @@ const TimeButton = ({ id, toggleAvailbility }) => {
     const { user } = UserAuth();
 
     const handleClick = async () => {
-        if (JSON.stringify(user) !== "{}") {
-            // if the current status is not free, add
-            if (!free) {
-                await updateDoc(doc(db, "users", user.email), {
-                    times: arrayUnion(id),
-                });
-            } else {
-                // if the current status is free, remove
-                await updateDoc(doc(db, "users", user.email), {
-                    times: arrayRemove(id),
-                });
-            }
-            setFree(!free);
-        } else {
-            alert("Please login");
-        }
+        await toggleAvailbility(id, free);
+        setFree(!free);
     };
 
     // Get current availability status
