@@ -37,16 +37,6 @@ const Dashboard = () => {
         });
     }, [user?.email]);
 
-    const handleLogout = async () => {
-        try {
-            await logOut();
-            navigate("/");
-            console.log("User logged out.");
-        } catch (e) {
-            console.log(e.message);
-        }
-    };
-
     // Get registered session for current user
     useEffect(() => {
         if (JSON.stringify(user) !== "{}") {
@@ -64,6 +54,17 @@ const Dashboard = () => {
             });
         }
     }, [user?.email]);
+
+    // event handlers
+    const handleLogout = async () => {
+        try {
+            await logOut();
+            navigate("/");
+            console.log("User logged out.");
+        } catch (e) {
+            console.log(e.message);
+        }
+    };
 
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
@@ -87,7 +88,6 @@ const Dashboard = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {console.log(TIMES)}
                     {TIMES.map((time, timeKey) => (
                         <tr key={timeKey}>
                             <td>{getTimeStringsIn12HFormat(time)}</td>
