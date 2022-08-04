@@ -1,22 +1,22 @@
 import React from "react";
 
-const SessionRow = (props) => {
+const SessionRow = ({ code, start, end, ra, compensation }) => {
     return (
         <tr className="border-b">
             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {props.code}
+                {code}
             </td>
             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                {props.start}
+                {start}
             </td>
             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                {props.end}
+                {end}
             </td>
             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                {props.ra}
+                {ra}
             </td>
             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                {"$ ".concat(props.compensation)}
+                {`$ ${compensation}`}
             </td>
         </tr>
     );
