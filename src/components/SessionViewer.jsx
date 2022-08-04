@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SessionRow from "./SessionRow";
+import AdminSessionRow from "./AdminSessionRow";
 import { db } from "../firebase";
 import { getDocs, collection, query, where } from "firebase/firestore";
 
@@ -23,7 +23,7 @@ const SessionViewer = () => {
                 ).then((snapshot) => {
                     const sessionArray = [];
                     snapshot.forEach((doc) => {
-                        sessionArray.push(doc.data());
+                        sessionArray.push({ id: doc.id, data: doc.data() });
                     });
                     setSessions(sessionArray);
                 });
@@ -34,7 +34,7 @@ const SessionViewer = () => {
         };
     }, [email]);
     return (
-        <div>
+        <div className="max-w-[900px] mx-auto my-16 p-4">
             <div className="flex flex-col py-2">
                 <label className="py-2 font-medium">Email</label>
                 <input
@@ -84,25 +84,29 @@ const SessionViewer = () => {
                                 </thead>
                                 <tbody>
                                     {sessions.map(
-                                        (item, key) =>
-                                            item.status === "open" && (
-                                                <SessionRow
-                                                    code={item.sessionCode}
-                                                    start={item.startTime
-                                                        .toDate()
-                                                        .toLocaleString(
-                                                            "en-US"
-                                                        )}
-                                                    end={item.endTime
-                                                        .toDate()
-                                                        .toLocaleString(
-                                                            "en-US"
-                                                        )}
-                                                    ra={item.ra}
-                                                    compensation={
-                                                        item.compensation
+                                        (session) =>
+                                            session.data.status === "open" && (
+                                                <AdminSessionRow
+                                                    code={
+                                                        session.data.sessionCode
                                                     }
-                                                    key={key}
+                                                    start={session.data.startTime
+                                                        .toDate()
+                                                        .toLocaleString(
+                                                            "en-US"
+                                                        )}
+                                                    end={session.data.endTime
+                                                        .toDate()
+                                                        .toLocaleString(
+                                                            "en-US"
+                                                        )}
+                                                    ra={session.data.ra}
+                                                    compensation={
+                                                        session.data
+                                                            .compensation
+                                                    }
+                                                    key={session.id}
+                                                    id={session.id}
                                                 />
                                             )
                                     )}
