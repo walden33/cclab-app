@@ -12,7 +12,7 @@ import {
     getDocs,
 } from "firebase/firestore";
 
-const TimeButton = (props) => {
+const TimeButton = ({ id, toggleAvailbility }) => {
     const [free, setFree] = useState(false);
     const { user } = UserAuth();
 
@@ -21,12 +21,12 @@ const TimeButton = (props) => {
             // if the current status is not free, add
             if (!free) {
                 await updateDoc(doc(db, "users", user.email), {
-                    times: arrayUnion(props.id),
+                    times: arrayUnion(id),
                 });
             } else {
                 // if the current status is free, remove
                 await updateDoc(doc(db, "users", user.email), {
-                    times: arrayRemove(props.id),
+                    times: arrayRemove(id),
                 });
             }
             setFree(!free);
@@ -49,7 +49,7 @@ const TimeButton = (props) => {
                 }
             };
             getFreeTimes().then((data) => {
-                if (data.includes(props.id)) {
+                if (data.includes(id)) {
                     setFree(true);
                 }
             });
@@ -63,7 +63,7 @@ const TimeButton = (props) => {
                     ? "bg-green-300 hover:bg-green-50"
                     : "bg-red-300 hover:bg-red-50"
             )}
-            id={props.id}
+            id={id}
             onClick={handleClick}
         >
             {free ? "Yes" : "No"}

@@ -66,6 +66,10 @@ const Dashboard = () => {
         }
     };
 
+    const toggleAvailbility = async (time) => {
+        console.log(time);
+    };
+
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
             <h1 className="text-2xl font-bold py-4">Account</h1>
@@ -92,7 +96,10 @@ const Dashboard = () => {
                         <tr key={timeKey}>
                             <td>{getTimeStringsIn12HFormat(time)}</td>
                             {DAYSOFWEEK.map((d, dKey) => (
-                                <TimeButton id={`${d}_${time}`}></TimeButton>
+                                <TimeButton
+                                    id={`${d}_${time}`}
+                                    toggleAvailbility={toggleAvailbility}
+                                ></TimeButton>
                             ))}
                         </tr>
                     ))}
