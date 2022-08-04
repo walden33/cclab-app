@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
 import AdminSessionRow from "./AdminSessionRow";
 import { db } from "../firebase";
-import { getDocs, collection, query, where } from "firebase/firestore";
+import {
+    getDocs,
+    collection,
+    query,
+    where,
+    doc,
+    updateDoc,
+} from "firebase/firestore";
 
 const SessionViewer = () => {
     const [email, setEmail] = useState("");
     const [sessions, setSessions] = useState([]);
+    const [message, setMessage] = useState("");
+    // A state variable used to trigger re-render of session list
+    const [numberOfSessionStatusChange, setNumberofSessionStatusChange] =
+        useState(0);
 
     /**
      * When the user enters a potential participant email, query the database
@@ -15,26 +26,59 @@ const SessionViewer = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             if (email.length > 0) {
+                setMessage("Searching ...");
                 getDocs(
                     query(
                         collection(db, "sessions"),
                         where("subId", "==", email)
                     )
-                ).then((snapshot) => {
-                    const sessionArray = [];
-                    snapshot.forEach((doc) => {
-                        sessionArray.push({ id: doc.id, data: doc.data() });
+                )
+                    .then((snapshot) => {
+                        const sessionArray = [];
+                        snapshot.forEach((doc) => {
+                            sessionArray.push({ id: doc.id, data: doc.data() });
+                        });
+                        setSessions(sessionArray);
+                        setMessage("Query completed.");
+                    })
+                    .catch((error) => {
+                        setMessage(error);
                     });
-                    setSessions(sessionArray);
-                });
             }
         }, 1000);
         return () => {
             clearTimeout(timeout);
         };
-    }, [email]);
+    }, [email, numberOfSessionStatusChange]);
+
+    const handleComplete = async (id) => {
+        setMessage(`Setting session status to completed ...`);
+        try {
+            await updateDoc(doc(db, "sessions", id), { status: "completed" });
+        } catch (error) {
+            setMessage(error);
+        } finally {
+            setMessage(
+                `Successfully marked session as completed with id: ${id}`
+            );
+            setNumberofSessionStatusChange((prev) => prev + 1);
+        }
+    };
+
+    const handleRemove = async (id) => {
+        setMessage(`Deleting session ...`);
+        try {
+            await updateDoc(doc(db, "sessions", id), { status: "completed" });
+        } catch (error) {
+            setMessage(error);
+        } finally {
+            setMessage(`Successfully deleted session with id: ${id}`);
+            setNumberofSessionStatusChange((prev) => prev + 1);
+        }
+    };
+
     return (
-        <div className="max-w-[900px] mx-auto my-16 p-4">
+        <div className="max-w-[1080px] mx-auto my-16 p-4">
             <div className="flex flex-col py-2">
                 <label className="py-2 font-medium">Email</label>
                 <input
@@ -43,6 +87,7 @@ const SessionViewer = () => {
                     type="email"
                 />
             </div>
+            <div className="flex flex-col py-2">{message}</div>
             <div className="flex flex-col">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
@@ -80,12 +125,25 @@ const SessionViewer = () => {
                                         >
                                             Compensation
                                         </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Status
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                                        >
+                                            Actions
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {sessions.map(
                                         (session) =>
-                                            session.data.status === "open" && (
+                                            session.data.status !==
+                                                "deleted" && (
                                                 <AdminSessionRow
                                                     code={
                                                         session.data.sessionCode
@@ -105,8 +163,13 @@ const SessionViewer = () => {
                                                         session.data
                                                             .compensation
                                                     }
+                                                    status={session.data.status}
                                                     key={session.id}
                                                     id={session.id}
+                                                    handleComplete={
+                                                        handleComplete
+                                                    }
+                                                    handleRemove={handleRemove}
                                                 />
                                             )
                                     )}
