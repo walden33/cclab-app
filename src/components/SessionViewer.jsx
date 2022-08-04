@@ -68,7 +68,7 @@ const SessionViewer = () => {
     const handleRemove = async (id) => {
         setMessage(`Deleting session ...`);
         try {
-            await updateDoc(doc(db, "sessions", id), { status: "completed" });
+            await updateDoc(doc(db, "sessions", id), { status: "deleted" });
         } catch (error) {
             setMessage(error);
         } finally {
