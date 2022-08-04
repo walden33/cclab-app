@@ -2,10 +2,12 @@ import React from "react";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
-import ResearcherDashboard from "./components/ResearcherDashboard";
+import AddSession from "./components/AddSession";
+import SessionViewer from "./components/SessionViewer";
 import { Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
     return (
@@ -24,11 +26,19 @@ function App() {
                         }
                     ></Route>
                     <Route
-                        path="/researcher/dashboard"
+                        path="/admin/sessions"
                         element={
-                            <ProtectedRoute>
-                                <ResearcherDashboard />
-                            </ProtectedRoute>
+                            <AdminRoute>
+                                <SessionViewer />
+                            </AdminRoute>
+                        }
+                    ></Route>
+                    <Route
+                        path="/admin/sessions/add"
+                        element={
+                            <AdminRoute>
+                                <AddSession />
+                            </AdminRoute>
                         }
                     ></Route>
                 </Routes>
