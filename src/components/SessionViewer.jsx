@@ -9,6 +9,7 @@ import {
     doc,
     updateDoc,
 } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const SessionViewer = () => {
     const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ const SessionViewer = () => {
     // A state variable used to trigger re-render of session list
     const [numberOfSessionStatusChange, setNumberofSessionStatusChange] =
         useState(0);
+    const navigate = useNavigate();
 
     /**
      * When the user enters a potential participant email, query the database
@@ -77,10 +79,14 @@ const SessionViewer = () => {
         }
     };
 
+    const handleAddNewSession = () => {
+        navigate("./add");
+    };
+
     return (
         <div className="max-w-[1080px] mx-auto my-16 p-4">
             <div className="flex flex-col py-2">
-                <label className="py-2 font-medium">Email</label>
+                <label className="py-2 font-medium">Participant ID</label>
                 <input
                     onChange={(e) => setEmail(e.target.value)}
                     className="border p-3"
@@ -176,6 +182,14 @@ const SessionViewer = () => {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div className="py-2 inline-block text-right min-w-full sm:px-6 lg:px-8">
+                        <button
+                            className="p-2 border bg-gray-900 text-white hover:bg-gray-700"
+                            onClick={handleAddNewSession}
+                        >
+                            Add New Session
+                        </button>
                     </div>
                 </div>
             </div>
