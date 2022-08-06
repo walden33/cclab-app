@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, getDoc, doc, Timestamp } from "firebase/firestore";
+import { UserAuth } from "../contexts/AuthContext";
+import { useRef } from "react";
 
 const AddSession = () => {
+    const { user } = UserAuth();
+
     const [email, setEmail] = useState("");
     const [startTime, setStartTime] = useState();
     const [endTime, setEndTime] = useState();
     const [sessionCode, setSessionCode] = useState("");
     const [researcher, setResearcher] = useState("");
+    const researcherRef = useRef(null);
     const [compensation, setCompensation] = useState(0);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -25,6 +31,17 @@ const AddSession = () => {
             alert(error);
         }
     };
+
+    // Auto fill researcher's name
+    useEffect(() => {
+        if (JSON.stringify(user) !== "{}") {
+            getDoc(doc(db, "admins", user.email)).then((docSnap) => {
+                setResearcher(docSnap.data().name);
+                researcherRef.current.value = docSnap.data().name;
+            });
+        }
+    }, [user?.email]);
+
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
             <form onSubmit={handleSubmit}>
@@ -47,6 +64,7 @@ const AddSession = () => {
                 <div className="flex flex-col py-2">
                     <label className="py-2 font-medium">Researcher Name</label>
                     <input
+                        ref={researcherRef}
                         onChange={(e) => setResearcher(e.target.value)}
                         className="border p-3"
                         type="text"
