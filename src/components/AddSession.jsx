@@ -5,15 +5,19 @@ import { UserAuth } from "../contexts/AuthContext";
 import { useRef } from "react";
 
 const AddSession = () => {
+    const HOURLYRATE = 15;
+
     const { user } = UserAuth();
 
     const [email, setEmail] = useState("");
-    const [startTime, setStartTime] = useState();
-    const [endTime, setEndTime] = useState();
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
     const [sessionCode, setSessionCode] = useState("");
     const [researcher, setResearcher] = useState("");
-    const researcherRef = useRef(null);
     const [compensation, setCompensation] = useState(0);
+
+    const researcherRef = useRef(null);
+    const compensationRef = useRef(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,6 +45,24 @@ const AddSession = () => {
             });
         }
     }, [user?.email]);
+
+    // Calculate compensation
+    useEffect(() => {
+        if (startTime !== null && endTime !== null) {
+            let pay;
+            const startTimeInMilliseconds = new Date(startTime).getTime();
+            const endTimeInMilliseconds = new Date(endTime).getTime();
+            if (endTime > startTime) {
+                pay =
+                    ((endTimeInMilliseconds - startTimeInMilliseconds) /
+                        1000 /
+                        3600) *
+                    HOURLYRATE;
+                setCompensation(pay);
+                compensationRef.current.value = pay;
+            }
+        }
+    }, [startTime, endTime]);
 
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
@@ -89,6 +111,7 @@ const AddSession = () => {
                 <div className="flex flex-col py-2">
                     <label className="py-2 font-medium">Compensation</label>
                     <input
+                        ref={compensationRef}
                         onChange={(e) => setCompensation(e.target.value)}
                         className="border p-3"
                         type="number"
