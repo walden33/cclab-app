@@ -19,6 +19,9 @@ const AddSession = () => {
     const researcherRef = useRef(null);
     const compensationRef = useRef(null);
 
+    // Client side form validation
+    const validateForm = async () => {};
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -41,10 +44,10 @@ const AddSession = () => {
         if (JSON.stringify(user) !== "{}") {
             getDoc(doc(db, "admins", user.email)).then((docSnap) => {
                 setResearcher(docSnap.data().name);
-                researcherRef.current.value = docSnap.data().name;
+                researcherRef.current.value = researcher;
             });
         }
-    }, [user?.email]);
+    });
 
     // Calculate compensation
     useEffect(() => {
@@ -59,7 +62,7 @@ const AddSession = () => {
                         3600) *
                     HOURLYRATE;
                 setCompensation(pay);
-                compensationRef.current.value = pay;
+                compensationRef.current.value = compensation;
             }
         }
     }, [startTime, endTime]);
@@ -120,7 +123,7 @@ const AddSession = () => {
                 <div className="flex flex-col py-2">
                     <button
                         onClick={handleSubmit}
-                        className="border border-blue-500 bg-blue-600 hover:bg-blue-500 text-white w-60 p-4 my-2"
+                        className=" bg-gray-900 text-white hover:bg-gray-700 w-60 p-4 my-2"
                     >
                         Book Session
                     </button>
