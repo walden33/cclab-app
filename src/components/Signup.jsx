@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { GoogleButton } from "react-google-button";
 import { db } from "../firebase";
 import { UserAuth } from "../contexts/AuthContext";
 import { doc, setDoc } from "firebase/firestore";
@@ -8,7 +9,7 @@ const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { user, createUser } = UserAuth();
+    const { user, createUser, googleSignIn } = UserAuth();
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,18 +25,27 @@ const Signup = () => {
         }
     };
 
-    // Users don't need to be here if they are already signed in.
+    // If currently a user is signed in, redirect to dashboard page
     useEffect(() => {
         if (user != null) {
             navigate("/dashboard");
         }
     }, [user]);
 
+    const handleGoogleSignIn = async () => {
+        try {
+            await googleSignIn();
+            navigate("/dashboard");
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
             <div>
                 <h1 className="text-2xl font-bold py-2">
-                    Sign in to your account
+                    Signup an account with CCLAB
                 </h1>
                 <p className="py-2">
                     Already have an account?{"  "}
@@ -61,9 +71,12 @@ const Signup = () => {
                         type="password"
                     />
                 </div>
-                <button className="border border-blue-500 bg-blue-600 hover:bg-blue-500 text-white w-full p-4 my-2">
+                <button className="bg-gray-900 text-white hover:bg-gray-700 w-60 p-4 my-2">
                     Sign Up
                 </button>
+                <div className=" w-full">
+                    <GoogleButton onClick={handleGoogleSignIn}></GoogleButton>
+                </div>
             </form>
         </div>
     );
