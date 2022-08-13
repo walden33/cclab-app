@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, getDoc, doc, Timestamp } from "firebase/firestore";
 import { UserAuth } from "../contexts/AuthContext";
-import { useRef } from "react";
+import axios from "axios";
 
 const AddSession = () => {
     const HOURLY_RATE = 15;
@@ -13,6 +13,14 @@ const AddSession = () => {
         submit: "Submitting session information ...",
         success: "Session added with ID: ",
     };
+    const CALENDAR_IDS = {
+        FMRI: process.env.REACT_APP_CALENDAR_ID_FMRI,
+        RM1: process.env.REACT_APP_CALENDAR_ID_RM1,
+        RM2: process.env.REACT_APP_CALENDAR_ID_RM2,
+        RM3: process.env.REACT_APP_CALENDAR_ID_RM3,
+        RM221E: process.env.REACT_APP_CALENDAR_ID_RM221E,
+    };
+    const CALENDAR_EVENT_API_URL = process.env.REACT_APP_CALENDAR_EVENT_API_URL;
 
     const { user } = UserAuth();
 
@@ -39,6 +47,27 @@ const AddSession = () => {
         setButtonText(SUBMIT_BUTTON_TEXT_DISABLED);
         setMessage(MESSAGES.submit);
         try {
+            // create Google Calendar event
+            const postData = {
+                summary: "Event summary",
+                location: "1827 Neil Ave, Columbus, OH 43210",
+                description: "Event summary",
+                start: {
+                    dateTime: "2022-08-15T18:30:00",
+                    timeZone: "America/New_York",
+                },
+                end: {
+                    dateTime: "2022-08-15T19:00:00",
+                    timeZone: "America/New_York",
+                },
+            };
+            const resp = await axios.post(
+                `${CALENDAR_EVENT_API_URL}?calendarId=${process.env.REACT_APP_CALENDAR_ID_RM3}`,
+                postData
+            );
+            const eventId = resp.data?.id;
+
+            // create Firebase entry
             const docRef = await addDoc(collection(db, "sessions"), {
                 subId: email,
                 sessionCode: sessionCode,
@@ -47,10 +76,11 @@ const AddSession = () => {
                 endTime: Timestamp.fromDate(new Date(endTime)),
                 compensation: compensation,
                 status: "open",
+                gCalEventId: eventId,
             });
             setMessage(`Session added with ID: ${docRef.id}`);
         } catch (error) {
-            alert(error);
+            console.log(error);
         } finally {
             setButtonDisabled(false);
             setButtonText(SUBMIT_BUTTON_TEXT_DEFAULT);
