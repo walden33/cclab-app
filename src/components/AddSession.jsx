@@ -107,7 +107,7 @@ const AddSession = () => {
                 researcherRef.current.value = researcher;
             });
         }
-    });
+    }, [user]);
 
     // Calculate compensation
     useEffect(() => {
