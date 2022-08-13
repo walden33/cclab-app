@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleButton } from "react-google-button";
 import { UserAuth } from "../contexts/AuthContext";
+import { db } from "../firebase";
+import { getDoc, doc } from "firebase/firestore";
 
 const Signin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+
     const { user, signIn, googleSignIn } = UserAuth();
     const navigate = useNavigate();
 
@@ -18,13 +22,17 @@ const Signin = () => {
             navigate("/dashboard");
         } catch (e) {
             setError(e.message);
+            setMessage(
+                "Either the email or password does not match our record"
+            );
             console.log(error);
         }
     };
 
-    // Users don't need to be here if they are already signed in.
+    // If currently a user is signed in, redirect to dashboard page
     useEffect(() => {
         if (user != null) {
+            // getUserIsAdmin().then((isAdmin) => console.log(isAdmin));
             navigate("/dashboard");
         }
     }, [user]);
@@ -69,7 +77,10 @@ const Signin = () => {
                     />
                 </div>
                 <div className="flex flex-col py-2">
-                    <button className="border border-blue-500 bg-blue-600 hover:bg-blue-500 text-white w-60 p-4 my-2">
+                    <p className="text-red-500">{message}</p>
+                </div>
+                <div className="flex flex-col py-2">
+                    <button className="bg-gray-900 text-white hover:bg-gray-700 w-60 p-4 my-2">
                         Sign In
                     </button>
                     <div className=" w-full">

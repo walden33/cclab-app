@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "./components/Header";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
@@ -8,15 +9,17 @@ import { Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import ForgetPassword from "./components/ForgetPassword";
 
 function App() {
     return (
         <div className="App">
-            <h1 className="text-center text-3xl font-bold my-10">CCLab</h1>
+            <Header />
             <AuthContextProvider>
                 <Routes>
                     <Route path="/" element={<Signin />}></Route>
                     <Route path="/signup" element={<Signup />}></Route>
+                    <Route path="reset" element={<ForgetPassword />}></Route>
                     <Route
                         path="/dashboard"
                         element={
@@ -28,17 +31,17 @@ function App() {
                     <Route
                         path="/admin/sessions"
                         element={
-                            <AdminRoute>
+                            <ProtectedRoute>
                                 <SessionViewer />
-                            </AdminRoute>
+                            </ProtectedRoute>
                         }
                     ></Route>
                     <Route
                         path="/admin/sessions/add"
                         element={
-                            <AdminRoute>
+                            <ProtectedRoute>
                                 <AddSession />
-                            </AdminRoute>
+                            </ProtectedRoute>
                         }
                     ></Route>
                 </Routes>

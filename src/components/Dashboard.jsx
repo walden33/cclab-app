@@ -94,6 +94,11 @@ const Dashboard = () => {
                 Logout
             </button>
             <h1 className="text-2xl font-bold py-4">Availability</h1>
+            <p>
+                Please toggle your availability for each time frame in a typical
+                working week. One of our team members will reach out to you
+                regarding the next steps of your participation!
+            </p>
             <table className="table-fixed border-separate border border-slate-400">
                 <thead>
                     <tr>
