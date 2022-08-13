@@ -5,16 +5,26 @@ import { UserAuth } from "../contexts/AuthContext";
 import { useRef } from "react";
 
 const AddSession = () => {
-    const HOURLYRATE = 15;
+    const HOURLY_RATE = 15;
+    const SUBMIT_BUTTON_TEXT_DEFAULT = "Book Session";
+    const SUBMIT_BUTTON_TEXT_DISABLED = "Booking ...";
+    const MESSAGES = {
+        init: "Welcome to CCLAB session adding tool",
+        submit: "Submitting session information ...",
+        success: "Session added with ID: ",
+    };
 
     const { user } = UserAuth();
 
+    const [message, setMessage] = useState(MESSAGES.init);
     const [email, setEmail] = useState("");
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [sessionCode, setSessionCode] = useState("");
     const [researcher, setResearcher] = useState("");
     const [compensation, setCompensation] = useState(0);
+    const [buttonText, setButtonText] = useState(SUBMIT_BUTTON_TEXT_DEFAULT);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
 
     const researcherRef = useRef(null);
     const compensationRef = useRef(null);
@@ -24,6 +34,10 @@ const AddSession = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // disable button
+        setButtonDisabled(true);
+        setButtonText(SUBMIT_BUTTON_TEXT_DISABLED);
+        setMessage(MESSAGES.submit);
         try {
             const docRef = await addDoc(collection(db, "sessions"), {
                 subId: email,
@@ -34,8 +48,12 @@ const AddSession = () => {
                 compensation: compensation,
                 status: "open",
             });
+            setMessage(`Session added with ID: ${docRef.id}`);
         } catch (error) {
             alert(error);
+        } finally {
+            setButtonDisabled(false);
+            setButtonText(SUBMIT_BUTTON_TEXT_DEFAULT);
         }
     };
 
@@ -60,15 +78,18 @@ const AddSession = () => {
                     ((endTimeInMilliseconds - startTimeInMilliseconds) /
                         1000 /
                         3600) *
-                    HOURLYRATE;
+                    HOURLY_RATE;
                 setCompensation(pay);
                 compensationRef.current.value = compensation;
             }
         }
-    }, [startTime, endTime]);
+    }, [compensation, startTime, endTime]);
 
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
+            <div className="flex flex-col p-2 bg-slate-900 rounded-lg text-white">
+                {message}
+            </div>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col py-2">
                     <label className="py-2 font-medium">Participant ID</label>
@@ -123,9 +144,10 @@ const AddSession = () => {
                 <div className="flex flex-col py-2">
                     <button
                         onClick={handleSubmit}
-                        className=" bg-gray-900 text-white hover:bg-gray-700 w-60 p-4 my-2"
+                        className=" bg-gray-900 text-white w-60 p-4 my-2 hover:bg-gray-700 disabled:bg-gray-400"
+                        disabled={buttonDisabled}
                     >
-                        Book Session
+                        {buttonText}
                     </button>
                 </div>
             </form>
