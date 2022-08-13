@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db } from "../firebase";
-import {
-    collection,
-    addDoc,
-    setDoc,
-    getDoc,
-    doc,
-    Timestamp,
-} from "firebase/firestore";
+import { setDoc, getDoc, doc, Timestamp } from "firebase/firestore";
 import { UserAuth } from "../contexts/AuthContext";
 import axios from "axios";
+import {
+    CALENDAR_IDS,
+    CALENDAR_EVENT_API_URL,
+    LOCATION,
+    TIMEZONE,
+} from "../utils/consts";
 
 const AddSession = () => {
     const HOURLY_RATE = 15;
@@ -20,19 +19,13 @@ const AddSession = () => {
         submit: "Submitting session information ...",
         success: "Session added with ID: ",
     };
-    const CALENDAR_IDS = {
-        FMRI: process.env.REACT_APP_CALENDAR_ID_FMRI,
-        RM1: process.env.REACT_APP_CALENDAR_ID_RM1,
-        RM2: process.env.REACT_APP_CALENDAR_ID_RM2,
-        RM3: process.env.REACT_APP_CALENDAR_ID_RM3,
-        RM221E: process.env.REACT_APP_CALENDAR_ID_RM221E,
-    };
-    const CALENDAR_EVENT_API_URL = process.env.REACT_APP_CALENDAR_EVENT_API_URL;
 
     const { user } = UserAuth();
 
     const [message, setMessage] = useState(MESSAGES.init);
+    const [errorExist, setErrorExist] = useState(false);
     const [email, setEmail] = useState("");
+    const [room, setRoom] = useState("");
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [sessionCode, setSessionCode] = useState("");
@@ -43,6 +36,16 @@ const AddSession = () => {
 
     const researcherRef = useRef(null);
     const compensationRef = useRef(null);
+
+    // Helper function to create event summary for google calendar
+    // Format: Session Code - Researcher
+    const createEventSummary = () => {
+        return `${sessionCode} - ${researcher.split(" ")[0]}`;
+    };
+
+    // Helper function to format dateTime string
+    // such that the second 00 is appended to the YYYY-MM-DDTHH-MM string
+    const formatDateTimeForGoogleCalendarAPICall = (str) => `${str}:00`;
 
     // Client side form validation
     const validateForm = async () => {};
@@ -56,38 +59,30 @@ const AddSession = () => {
         try {
             // create Google Calendar event
             const postData = {
-                summary: "Event summary",
-                location: "1827 Neil Ave, Columbus, OH 43210",
-                description: "Event summary",
+                summary: createEventSummary(),
+                location: LOCATION,
+                description: createEventSummary(),
                 start: {
-                    dateTime: "2022-08-15T18:30:00",
-                    timeZone: "America/New_York",
+                    dateTime: formatDateTimeForGoogleCalendarAPICall(startTime),
+                    timeZone: TIMEZONE,
                 },
                 end: {
-                    dateTime: "2022-08-15T19:00:00",
-                    timeZone: "America/New_York",
+                    dateTime: formatDateTimeForGoogleCalendarAPICall(endTime),
+                    timeZone: TIMEZONE,
                 },
             };
             const resp = await axios.post(
-                `${CALENDAR_EVENT_API_URL}?calendarId=${process.env.REACT_APP_CALENDAR_ID_RM3}`,
+                `${CALENDAR_EVENT_API_URL}?calendarId=${CALENDAR_IDS[room]}`,
                 postData
             );
             const eventId = resp.data?.id;
             setMessage(`Calendar event added with ID: ${eventId}`);
+
             // create Firebase entry
-            // const docRef = await addDoc(collection(db, "sessions"), {
-            //     subId: email,
-            //     sessionCode: sessionCode,
-            //     researcher: researcher,
-            //     startTime: Timestamp.fromDate(new Date(startTime)),
-            //     endTime: Timestamp.fromDate(new Date(endTime)),
-            //     compensation: compensation,
-            //     status: "open",
-            //     gCalEventId: eventId,
-            // });
             await setDoc(doc(db, "sessions", eventId), {
                 subId: email,
                 sessionCode: sessionCode,
+                room: room,
                 researcher: researcher,
                 startTime: Timestamp.fromDate(new Date(startTime)),
                 endTime: Timestamp.fromDate(new Date(endTime)),
@@ -96,7 +91,8 @@ const AddSession = () => {
             });
             setMessage(`Session added with ID: ${eventId}`);
         } catch (error) {
-            console.log(error);
+            setErrorExist(true);
+            setMessage(String(error));
         } finally {
             setButtonDisabled(false);
             setButtonText(SUBMIT_BUTTON_TEXT_DEFAULT);
@@ -133,7 +129,11 @@ const AddSession = () => {
 
     return (
         <div className="max-w-[700px] mx-auto my-16 p-4">
-            <div className="flex flex-col p-2 bg-slate-900 rounded-lg text-white">
+            <div
+                className={`flex flex-col p-2 rounded-lg text-white ${
+                    errorExist ? "bg-red-700" : "bg-slate-900"
+                }`}
+            >
                 {message}
             </div>
             <form onSubmit={handleSubmit}>
@@ -152,6 +152,21 @@ const AddSession = () => {
                         className="border p-3"
                         type="text"
                     />
+                </div>
+                <div className="flex flex-col py-2">
+                    <label className="py-2 font-medium">Room</label>
+                    <select
+                        className="border p-3"
+                        onChange={(e) => {
+                            setRoom(e.target.value);
+                        }}
+                    >
+                        <option value="RM1">Room 1</option>
+                        <option value="RM2">Room 2</option>
+                        <option value="RM3">Room 3</option>
+                        <option value="RM221E">Room 221e</option>
+                        <option value="FMRI">fMRI</option>
+                    </select>
                 </div>
                 <div className="flex flex-col py-2">
                     <label className="py-2 font-medium">Researcher Name</label>
