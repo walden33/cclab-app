@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db } from "../firebase";
-import { collection, addDoc, getDoc, doc, Timestamp } from "firebase/firestore";
+import {
+    collection,
+    addDoc,
+    setDoc,
+    getDoc,
+    doc,
+    Timestamp,
+} from "firebase/firestore";
 import { UserAuth } from "../contexts/AuthContext";
 import axios from "axios";
 
@@ -66,9 +73,19 @@ const AddSession = () => {
                 postData
             );
             const eventId = resp.data?.id;
-
+            setMessage(`Calendar event added with ID: ${eventId}`);
             // create Firebase entry
-            const docRef = await addDoc(collection(db, "sessions"), {
+            // const docRef = await addDoc(collection(db, "sessions"), {
+            //     subId: email,
+            //     sessionCode: sessionCode,
+            //     researcher: researcher,
+            //     startTime: Timestamp.fromDate(new Date(startTime)),
+            //     endTime: Timestamp.fromDate(new Date(endTime)),
+            //     compensation: compensation,
+            //     status: "open",
+            //     gCalEventId: eventId,
+            // });
+            await setDoc(doc(db, "sessions", eventId), {
                 subId: email,
                 sessionCode: sessionCode,
                 researcher: researcher,
@@ -76,9 +93,8 @@ const AddSession = () => {
                 endTime: Timestamp.fromDate(new Date(endTime)),
                 compensation: compensation,
                 status: "open",
-                gCalEventId: eventId,
             });
-            setMessage(`Session added with ID: ${docRef.id}`);
+            setMessage(`Session added with ID: ${eventId}`);
         } catch (error) {
             console.log(error);
         } finally {
