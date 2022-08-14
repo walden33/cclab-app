@@ -109,9 +109,9 @@ const AddSession = () => {
     // Load researcher names
     useEffect(() => {
         let list = [];
-        getDocs(collection(db, "admins")).then((querySnapshot) => {
+        getDocs(collection(db, "researchers")).then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                list.push(doc.data());
+                list.push({ id: doc.id, ...doc.data() });
             });
         });
         setResearcherList(list);
@@ -186,8 +186,8 @@ const AddSession = () => {
                         list="researchers"
                     />
                     <datalist id="researchers">
-                        {researcherList.map((data) => (
-                            <option value={data.name} key={data.id}></option>
+                        {researcherList.map((d) => (
+                            <option value={d.name} key={d.id}></option>
                         ))}
                     </datalist>
                 </div>
