@@ -24,19 +24,7 @@ const Dashboard = () => {
     const { user, logOut } = UserAuth();
     const navigate = useNavigate();
 
-    const [name, setName] = useState("");
-    const [age, setAge] = useState(0);
-    const [gender, setGender] = useState("");
     const [sessions, setSessions] = useState([]);
-
-    // Load user name, age, and gender
-    useEffect(() => {
-        onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
-            setName(doc.data()?.name);
-            setAge(doc.data()?.age);
-            setGender(doc.data()?.gender);
-        });
-    }, [user?.email]);
 
     // Get registered session for current user
     useEffect(() => {
@@ -87,9 +75,6 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold py-4">Account</h1>
             <p>User Email: {user && user.email}</p>
             <p>User ID: {user && user.uid}</p>
-            <p>Name: {user && name}</p>
-            <p>Age: {user && age}</p>
-            <p>Gender: {user && gender}</p>
             <button onClick={handleLogout} className="border px-6 py-2 my-4">
                 Logout
             </button>
