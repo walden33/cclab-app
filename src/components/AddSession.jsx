@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db } from "../firebase";
-import { setDoc, getDoc, doc, Timestamp } from "firebase/firestore";
+import {
+    setDoc,
+    getDocs,
+    doc,
+    Timestamp,
+    collection,
+} from "firebase/firestore";
 import { UserAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import {
@@ -30,6 +36,7 @@ const AddSession = () => {
     const [endTime, setEndTime] = useState(null);
     const [sessionCode, setSessionCode] = useState("");
     const [researcher, setResearcher] = useState("");
+    const [researcherList, setResearcherList] = useState([]);
     const [compensation, setCompensation] = useState(0);
     const [buttonText, setButtonText] = useState(SUBMIT_BUTTON_TEXT_DEFAULT);
     const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -99,14 +106,15 @@ const AddSession = () => {
         }
     };
 
-    // Auto fill researcher's name
+    // Load researcher names
     useEffect(() => {
-        if (JSON.stringify(user) !== "{}") {
-            getDoc(doc(db, "admins", user.email)).then((docSnap) => {
-                setResearcher(docSnap.data().name);
-                researcherRef.current.value = researcher;
+        let list = [];
+        getDocs(collection(db, "admins")).then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                list.push(doc.data());
             });
-        }
+        });
+        setResearcherList(list);
     }, [user]);
 
     // Calculate compensation
@@ -175,7 +183,13 @@ const AddSession = () => {
                         onChange={(e) => setResearcher(e.target.value)}
                         className="border p-3"
                         type="text"
+                        list="researchers"
                     />
+                    <datalist id="researchers">
+                        {researcherList.map((data) => (
+                            <option value={data.name} key={data.id}></option>
+                        ))}
+                    </datalist>
                 </div>
                 <div className="flex flex-col py-2">
                     <label className="py-2 font-medium">Start Time</label>
