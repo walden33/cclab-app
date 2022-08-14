@@ -35,6 +35,7 @@ const AddSession = () => {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [sessionCode, setSessionCode] = useState("");
+    const [sessionCodeList, setSessionCodeList] = useState([]);
     const [researcher, setResearcher] = useState("");
     const [researcherList, setResearcherList] = useState([]);
     const [compensation, setCompensation] = useState(0);
@@ -117,6 +118,17 @@ const AddSession = () => {
         setResearcherList(list);
     }, [user]);
 
+    // Load session codes
+    useEffect(() => {
+        let list = [];
+        getDocs(collection(db, "experiments")).then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                list.push({ id: doc.id, ...doc.data() });
+            });
+        });
+        setSessionCodeList(list);
+    }, [user]);
+
     // Calculate compensation
     useEffect(() => {
         if (startTime !== null && endTime !== null) {
@@ -159,7 +171,13 @@ const AddSession = () => {
                         onChange={(e) => setSessionCode(e.target.value)}
                         className="border p-3"
                         type="text"
+                        list="experiments"
                     />
+                    <datalist id="experiments">
+                        {sessionCodeList.map((d) => (
+                            <option value={d.code} key={d.id}></option>
+                        ))}
+                    </datalist>
                 </div>
                 <div className="flex flex-col py-2">
                     <label className="py-2 font-medium">Room</label>
