@@ -4,7 +4,6 @@ import { DAYSOFWEEK } from "../utils/consts";
 import { getTimes, getTimeStringsIn12HFormat } from "../utils/util";
 
 const TimeTable = ({ freeTimes, toggleAvailbility }) => {
-    console.log(freeTimes);
     return (
         <table className="table-fixed border-separate border border-slate-400">
             <thead>

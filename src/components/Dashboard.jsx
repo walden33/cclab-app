@@ -49,7 +49,6 @@ const Dashboard = () => {
                 });
                 setSessions(sessionArray);
             });
-            console.log("rendered");
         }
     }, [user]);
 
