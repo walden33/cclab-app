@@ -10,11 +10,11 @@ const TimeButton = ({ id, isFree, toggleAvailbility }) => {
 
     return (
         <td
-            className={"text-center border border-slate-400 ".concat(
+            className={`text-center border cursor-pointer border-slate-400 ${
                 free
                     ? "bg-green-300 hover:bg-green-50"
                     : "bg-red-300 hover:bg-red-50"
-            )}
+            }`}
             id={id}
             onClick={handleClick}
         >
