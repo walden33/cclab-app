@@ -16,3 +16,6 @@ export const LOCATION = "1827 Neil Ave, Columbus, OH 43210";
 
 // Default timezone
 export const TIMEZONE = "America/New_York";
+
+// Days of week
+export const DAYSOFWEEK = ["Mon", "Tue", "Wed", "Thu", "Fri"];

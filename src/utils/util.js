@@ -18,7 +18,7 @@ export const getTimes = () => {
  * Converts a HHMM (24h) string to a HH:MM AM/PM string
  *
  * @param {string} hhmm : time in HHMM (24h) format
- * @returns
+ * @returns {string} : time in HHMM AM/PM format
  */
 export const getTimeStringsIn12HFormat = (hhmm) => {
     if (Number(hhmm) < 1200) {

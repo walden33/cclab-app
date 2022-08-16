@@ -1,37 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { db } from "../firebase";
-import { UserAuth } from "../contexts/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import React, { useState } from "react";
 
-const TimeButton = ({ id, toggleAvailbility }) => {
-    const [free, setFree] = useState(false);
-    const { user } = UserAuth();
+const TimeButton = ({ id, isFree, toggleAvailbility }) => {
+    const [free, setFree] = useState(isFree);
 
     const handleClick = async () => {
         await toggleAvailbility(id, free);
         setFree(!free);
     };
-
-    // Get current availability status
-    useEffect(() => {
-        if (JSON.stringify(user) !== "{}") {
-            // If current user is not empty (when user is not logged in or loaded)
-            const getFreeTimes = async () => {
-                const docRef = doc(db, "users", user?.email);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    return docSnap.data()["times"];
-                } else {
-                    return [];
-                }
-            };
-            getFreeTimes().then((data) => {
-                if (data.includes(id)) {
-                    setFree(true);
-                }
-            });
-        }
-    }, [user?.email]);
 
     return (
         <td

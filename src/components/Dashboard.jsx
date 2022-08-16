@@ -4,7 +4,6 @@ import { UserAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import {
     doc,
-    onSnapshot,
     updateDoc,
     collection,
     query,
@@ -12,19 +11,28 @@ import {
     getDocs,
     arrayUnion,
     arrayRemove,
+    getDoc,
 } from "firebase/firestore";
-import TimeButton from "./TimeButton";
 import SessionRow from "./SessionRow";
-import { getTimes, getTimeStringsIn12HFormat } from "../utils/util";
+import TimeTable from "./TimeTable";
 
 const Dashboard = () => {
-    const DAYSOFWEEK = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-    const TIMES = getTimes();
-
     const { user, logOut } = UserAuth();
     const navigate = useNavigate();
 
+    const [freeTimes, setFreeTimes] = useState([]);
     const [sessions, setSessions] = useState([]);
+
+    // Get free time blocks for current user
+    useEffect(() => {
+        if (JSON.stringify(user) !== "{}") {
+            getDoc(doc(db, "users", user.email)).then((docSnap) => {
+                if (docSnap.exists()) {
+                    setFreeTimes(docSnap.data()["times"]);
+                }
+            });
+        }
+    }, [user]);
 
     // Get registered session for current user
     useEffect(() => {
@@ -41,8 +49,9 @@ const Dashboard = () => {
                 });
                 setSessions(sessionArray);
             });
+            console.log("rendered");
         }
-    }, [user?.email]);
+    }, [user]);
 
     // event handlers
     const handleLogout = async () => {
@@ -84,30 +93,10 @@ const Dashboard = () => {
                 working week. One of our team members will reach out to you
                 regarding the next steps of your participation!
             </p>
-            <table className="table-fixed border-separate border border-slate-400">
-                <thead>
-                    <tr>
-                        <th></th>
-                        {DAYSOFWEEK.map((item, key) => (
-                            <th key={key}>{item}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {TIMES.map((time, timeKey) => (
-                        <tr key={timeKey}>
-                            <td>{getTimeStringsIn12HFormat(time)}</td>
-                            {DAYSOFWEEK.map((d, dKey) => (
-                                <TimeButton
-                                    key={dKey}
-                                    id={`${d}_${time}`}
-                                    toggleAvailbility={toggleAvailbility}
-                                ></TimeButton>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <TimeTable
+                freeTimes={freeTimes}
+                toggleAvailbility={toggleAvailbility}
+            />
             <h1 className="text-2xl font-bold py-4">Registered Sessions</h1>
             <div className="flex flex-col">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
