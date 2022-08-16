@@ -4,6 +4,7 @@ import { UserAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import {
     doc,
+    setDoc,
     updateDoc,
     collection,
     query,
@@ -29,6 +30,11 @@ const Dashboard = () => {
             getDoc(doc(db, "users", user.email)).then((docSnap) => {
                 if (docSnap.exists()) {
                     setFreeTimes(docSnap.data()["times"]);
+                } else {
+                    // initialize user if haven't been
+                    setDoc(doc(db, "users", user.email), {
+                        times: [],
+                    });
                 }
             });
         }
