@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleButton } from "react-google-button";
 import { UserAuth } from "../contexts/AuthContext";
-import { db } from "../firebase";
-import { getDoc, doc } from "firebase/firestore";
 
 const Signin = () => {
     const [email, setEmail] = useState("");
@@ -50,7 +48,7 @@ const Signin = () => {
         <div className="max-w-[700px] mx-auto my-16 p-4">
             <div>
                 <h1 className="text-2xl font-bold py-2">
-                    Sign in to your account
+                    Sign in to your CCLAB account
                 </h1>
                 <p className="py-2">
                     Don't have an account yet?{"  "}
