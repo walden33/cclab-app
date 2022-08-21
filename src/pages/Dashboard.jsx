@@ -14,8 +14,8 @@ import {
     arrayRemove,
     getDoc,
 } from "firebase/firestore";
-import SessionRow from "./SessionRow";
-import TimeTable from "./TimeTable";
+import SessionRow from "../components/Session/SessionRow";
+import TimeTable from "../components/TimeTable/TimeTable";
 
 const Dashboard = () => {
     const { user, logOut } = UserAuth();

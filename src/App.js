@@ -1,15 +1,14 @@
 import React from "react";
 import Header from "./components/Header";
-import Signin from "./components/Signin";
-import Signup from "./components/Signup";
-import Dashboard from "./components/Dashboard";
-import AddSession from "./components/AddSession";
-import SessionViewer from "./components/SessionViewer";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import AddSession from "./pages/AddSession";
+import SessionViewer from "./pages/SessionViewer";
 import { Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AdminRoute from "./components/AdminRoute";
-import ForgetPassword from "./components/ForgetPassword";
+import ForgetPassword from "./pages/ForgetPassword";
 
 function App() {
     return (

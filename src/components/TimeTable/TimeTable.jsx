@@ -1,7 +1,7 @@
 import React from "react";
 import TimeButton from "./TimeButton";
-import { DAYSOFWEEK } from "../utils/consts";
-import { getTimes, getTimeStringsIn12HFormat } from "../utils/util";
+import { DAYSOFWEEK } from "../../utils/consts";
+import { getTimes, getTimeStringsIn12HFormat } from "../../utils/util";
 
 const TimeTable = ({ freeTimes, toggleAvailbility }) => {
     return (

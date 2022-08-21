@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AdminSessionRow from "./AdminSessionRow";
+import AdminSessionRow from "../components/Session/AdminSessionRow";
 import { db } from "../firebase";
 import {
     getDocs,
