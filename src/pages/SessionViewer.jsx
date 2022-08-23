@@ -10,6 +10,7 @@ import {
     updateDoc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import TableHeader from "../components/tables/TableHeader";
 
 const SessionViewer = () => {
     const [email, setEmail] = useState("");
@@ -19,6 +20,16 @@ const SessionViewer = () => {
     const [numberOfSessionStatusChange, setNumberofSessionStatusChange] =
         useState(0);
     const navigate = useNavigate();
+
+    const headerLabels = [
+        "Session code",
+        "Time Start",
+        "Time End",
+        "Researcher",
+        "Compensation",
+        "Status",
+        "Actions",
+    ];
 
     /**
      * When the user enters a potential participant email, query the database
@@ -99,52 +110,7 @@ const SessionViewer = () => {
                     <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                         <div className="overflow-hidden">
                             <table className="min-w-full">
-                                <thead className="border-b">
-                                    <tr>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                                        >
-                                            Session Code
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                                        >
-                                            Time Start
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                                        >
-                                            Time End
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                                        >
-                                            Researcher
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                                        >
-                                            Compensation
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                                        >
-                                            Status
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                                        >
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
+                                <TableHeader labels={headerLabels} />
                                 <tbody>
                                     {sessions.map(
                                         (session) =>
