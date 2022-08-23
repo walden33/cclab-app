@@ -9,6 +9,7 @@ import { Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgetPassword from "./pages/ForgetPassword";
+import UserViewer from "./pages/UserViewer";
 
 function App() {
     return (
@@ -40,6 +41,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <AddSession />
+                            </ProtectedRoute>
+                        }
+                    ></Route>
+                    <Route
+                        path="/admin/participants"
+                        element={
+                            <ProtectedRoute>
+                                <UserViewer />
                             </ProtectedRoute>
                         }
                     ></Route>
