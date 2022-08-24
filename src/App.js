@@ -10,6 +10,7 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgetPassword from "./pages/ForgetPassword";
 import UserViewer from "./pages/UserViewer";
+import ViewTimeTable from "./pages/ViewTimeTable";
 
 function App() {
     return (
@@ -49,6 +50,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <UserViewer />
+                            </ProtectedRoute>
+                        }
+                    ></Route>
+                    <Route
+                        path="/admin/participants/timetable/:id"
+                        element={
+                            <ProtectedRoute>
+                                <ViewTimeTable />
                             </ProtectedRoute>
                         }
                     ></Route>

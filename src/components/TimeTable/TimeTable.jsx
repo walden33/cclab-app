@@ -3,7 +3,7 @@ import TimeButton from "./TimeButton";
 import { DAYSOFWEEK } from "../../utils/consts";
 import { getTimes, getTimeStringsIn12HFormat } from "../../utils/util";
 
-const TimeTable = ({ freeTimes, toggleAvailbility }) => {
+const TimeTable = ({ freeTimes = [], toggleAvailbility = undefined }) => {
     return (
         <table className="table-fixed border-separate border border-slate-400">
             <thead>
